@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import axios from "axios";
 
 export default class AddTreasure extends Component {
   constructor() {
     super();
     this.state = {
-      treasureURL: '',
+      treasureURL: ""
     };
   }
 
@@ -13,7 +14,21 @@ export default class AddTreasure extends Component {
   }
 
   addTreasure() {
-    // post to /api/treasure/user here
+    // destructure treasureURL from state
+    const { treasureURL } = this.state;
+    // post the inputs from state to the value on the post
+    // then we reset the value of state to an empty string
+    // then we handle our errors
+    axios
+      .post("/api/treasure.user", { treasureURL: treasureURL })
+      .then(res => {
+        this.props.addMyTreasure(res.data);
+        this.setState({ treasureURL: "" });
+      })
+      .catch(error => {
+        console.log(error);
+        alert(error.response.request.response);
+      });
   }
 
   render() {
